@@ -1,0 +1,5 @@
+*~
+*.o
+Debug
+*.layout
+*.depend
