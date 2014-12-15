@@ -12,6 +12,9 @@ typedef struct etape{
     struct etape * ptsuiv;
 }etape;
 
+//thread time
+void thread_time(int tps_global, int tps_joueur);
+
 
 //Menu
 int thread_menu();
