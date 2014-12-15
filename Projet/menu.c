@@ -16,6 +16,7 @@ void thread_time( int tps_global,int tps_joueur)
 
 int thread_menu()
     {
+
     int choix,error=1;
     while(1)
         {

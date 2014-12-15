@@ -23,18 +23,34 @@ if(fic!=NULL)
     fscanf(fic,"%[^\n]",ligne);
     printf("%s",ligne);
     getchar();
+    int k;
 
-    int k=2;
-
-    if(ligne[0]=='H' || ligne[1]=='X' || strlen(ligne)>39)
+    // Vérification des données
+    if(ligne[0]=='H' || ligne[1]=='X' || ligne[10]==' ' || ligne[19]==' ' || ligne[28]=='C' || ligne[29]=='R' || ligne[30]=='L' || ligne[31]=='F' || strlen(ligne)>39)
     {
+
+    for(k=0;k<8;k++)
+    {
+    //param->joueur1[k]=ligne[2+k]
+    }
+
+    for(k=0;k<8;k++)
+    {
+    //param->joueur2[k]=ligne[11+k]
+    }
+
+    for(k=0;k<4;k++)
+    {
+   // param->tps_global[k]=ligne[11+k]
+    }
+
         if (nb==1)
         {
-            charger(chemin,fic);
+            charger(fic,ligne);
         }
         else if(nb==2)
         {
-            historique(chemin,fic);
+            historique(fic,ligne);
         }
     }
     else
@@ -50,14 +66,14 @@ if(fic!=NULL)
 
 }
 
-void charger(char* chemin,FILE* fic)
+void charger(FILE* fic,char* ligne)
 {
 
 
 
 }
 
-void historique(char* chemin,FILE* fic)
+void historique(FILE* fic,char* ligne)
 {
 
 

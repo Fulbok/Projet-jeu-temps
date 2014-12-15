@@ -6,15 +6,22 @@
 
 //Structure étapes parties
 typedef struct etape{
-    double restant;
+    int restant;
     char joueur[15];
     char coup[40];
     struct etape * ptsuiv;
 }etape;
 
+typedef struct param_structure{
+    char joueur1[8];
+    char joueur2[8];
+    int tps_global;
+    int tps_joueur;
+}param_structure;
+
+
 //thread time
 void thread_time(int tps_global, int tps_joueur);
-
 
 //Menu
 int thread_menu();
@@ -27,8 +34,8 @@ void quitter ();
 
 //Ouvreur
 void recup_chemin(int nb);
-void charger(char* chemin,FILE* fic);
-void historique(char* chemin,FILE* fic);
+void charger(FILE* fic,char* ligne);
+void historique(FILE* fic,char* ligne);
 
 
 
