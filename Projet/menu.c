@@ -23,7 +23,7 @@ int thread_menu()
         error=1;
         }
 
-        printf("Votre choix:");
+        printf("Votre choix : ");
         scanf("%d", &choix);
         getchar();
 
@@ -48,9 +48,7 @@ int thread_menu()
 
     }
 void Nvlle_partie(){}
-int recup_chemin(int nb){
-return 0;
-}
+
 void interrupt(){}
 void pause(){}
 void resume(){}
