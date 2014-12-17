@@ -17,7 +17,7 @@ void thread_time( int tps_global,int tps_joueur)
 int thread_menu()
     {
 
-    int choix,error=1;
+    int choix,error=1,restant;
     while(1)
         {
 
@@ -45,11 +45,11 @@ int thread_menu()
         switch(choix)
             {
             case 1 : Nvlle_partie();break;
-            case 2 : recup_chemin(1);break;
-            case 3 : interrupt();break;
+            case 2 : recup_chemin(CHARGER);break;
+            case 3 : sauvegarder(restant);break;
             case 4 : pause();break;
             case 5 : resume();break;
-            case 6 : recup_chemin(2);break;
+            case 6 : recup_chemin(HISTORIQUE);break;
             case 7 : quitter();break;
             default :error=0;
             }
@@ -109,13 +109,12 @@ void Nvlle_partie(){
     printf("Le temps par coup est de %d secondes\n", tps_joueur);
 
 
-    j
+
 
 
 
 }
 
-void interrupt(){}
 void pause(){}
 void resume(){}
 void quitter (){
