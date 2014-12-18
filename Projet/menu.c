@@ -69,7 +69,10 @@ int thread_menu()
 void Nvlle_partie(){
 
     char joueur1[8]="", joueur2[8];
-    int tps_global, tps_joueur, error1=1, error2=1;
+    int tps_global, tps_joueur;
+    int error1=1, error2=1, error_timeG=1, error_timeJ=1;
+    char test_time[4]; /*pour détecter erreur saisie temps */
+    int i=0, cond=1;
 
     printf("\n\n\t >>>>Nouvelle partie<<<< \n");
 
@@ -80,11 +83,11 @@ void Nvlle_partie(){
         scanf("%s", joueur1);
         getchar();
 
-        if((strlen(joueur1) > 1) && (strlen(joueur1) <= 8) )
+        if((strlen(joueur1) >= 1) && (strlen(joueur1) <= 8) )
             {
             error1=0;
             }
-     /*le nom ne doit pas dépasser 8 caractères*/
+     /*le nom ne doit pas dépasser 8 caractères, si c'est le cas recommence la saisie*/
      }
 
 
@@ -96,20 +99,60 @@ void Nvlle_partie(){
             {
             error2=0;
             }
-     /*le nom ne doit pas dépasser 8 caractères*/
+        if(strcmp(joueur1,joueur2)==0)
+            {
+            printf("Euuh, c'est un jeu pour 2 joueurs, tu ne peux pas jouer contre toi-même.\n");
+            error2=1;
+            }
+     /*le nom ne doit pas dépasser 8 caractères, si c'est le cas, recommence la saisie*/
      }
 
+    //Saisie différents temps de jeu.
+   /* while(error_timeG)*/
+    {
+        printf("Définir le temps de la partie (en secondes):");
+        scanf("%d", &tps_global);
+      /*  sprintf(test_time, "%d", tps_global);
+        while(i < 4 && cond)
+            {
+            if((test_time[i]-30 < 0) && (test_time[i]-40 < 0))
+                {
+                error_timeG = 0;
+                i++;
+                }
 
-    printf("Définir le temps de la partie (en secondes):");
-    scanf("%d", &tps_global);
-    printf("Le temps de la partie est de %d secondes\n", tps_global);
+            else
+                {
+                error_timeG = 1;
+                cond = 0;
+                }
 
-    printf("Définir le temps pour un coup (en secondes):");
-    scanf("%d", &tps_joueur);
-    printf("Le temps par coup est de %d secondes\n", tps_joueur);
+            }
+            */
+
+
+    }
+
+        printf("Le temps de la partie est de %d secondes\n", tps_global);
+
+
+    /*while(error_timeJ)*/
+    {
+        printf("Définir le temps pour un coup (en secondes):");
+        scanf("%d", &tps_joueur);
+    }
+
+        printf("Le temps par coup est de %d secondes\n", tps_joueur);
+
+
+        printf("\t Début de la partie\n");
 
 
 
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
 
 
 
