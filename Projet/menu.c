@@ -148,14 +148,6 @@ void Nvlle_partie(){
         printf("\t Début de la partie\n");
 
 
-
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-
-
-
 }
 
 void pause(){}

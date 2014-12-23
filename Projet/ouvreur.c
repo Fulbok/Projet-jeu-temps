@@ -10,46 +10,51 @@ if (nb!=CHARGER && nb!=HISTORIQUE)
 printf("Erreur appel fonction de récupréation du chemin, mauvais argument.");
 return ;
 }
-char chemin[100];
 
+char chemin[100];
+int n;
+
+// Saisie du nom du fichier
 printf("\nVeuillez saisir l'adresse exacte du fichier à ouvrir : \n");
-scanf("%s",chemin);
+n=scanf("%94s",chemin);
 getchar();
 
+if(n!=1){printf("mauvaise entrée!");getchar();}
+
+// Ajout de l'extension
+strcat(chemin,".histo");
+
+// Ouverture du fichier
 FILE * fic=NULL;
 fic=fopen(chemin,"r");
-char ligne[100];
+
+
 if(fic!=NULL)
 {
+    int nb_saisie=0;
+    char hx[2],crlf[4],ligne[100],verif[100];
+
+    // Lecture de la première ligne
     fscanf(fic,"%[^\n]",ligne);
     printf("%s",ligne);
     getchar();
-    int k;
 
-    // Vérification des données
-    if(ligne[0]=='H' || ligne[1]=='X' || ligne[10]==' ' || ligne[19]==' ' || ligne[28]=='C' || ligne[29]=='R' || ligne[30]=='L' || ligne[31]=='F' || strlen(ligne)>39)
-    {
+    // Découpage
+    sscanf(ligne,"%2s%8s %8s %4d%4d%4s",hx,param->joueur1,param->joueur2,&param->tps_global,&param->tps_joueur,crlf);
 
-    for(k=0;k<8;k++)
-    {
-    param->joueur1[k]=ligne[2+k];
-    }
-    param->joueur1[8]='\0';
 
-    for(k=0;k<8;k++)
-    {
-    param->joueur2[k]=ligne[11+k];
-    }
-    param->joueur2[8]='\0';
 
-//    for(k=0;k<4;k++)
-//    {
-//    param->tps_global[k]=ligne[11+k];
-//    }
+    nb_saisie=printf("\n%s ; %s ; %s ; %d ; %d ; %s ;\n",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur,crlf);
 
-    printf("|%s| ; |%s|",param->joueur1,param->joueur2);
+    printf("%d\n",nb_saisie); // 46 quand tout va bien ...
+    sprintf(verif,"%s%s %s ",hx,param->joueur1,param->joueur2);
+    nb_saisie=strncmp(ligne,verif,20);
+    printf("%20s\n%s\n%d",ligne,verif,nb_saisie);
+
+
     getchar();
 
+    // Exécution de la fonction correspondante
         if (nb==CHARGER)
         {
             charger(fic,ligne);
@@ -61,12 +66,9 @@ if(fic!=NULL)
     }
     else
     {
-    printf("Mauvais fichier.");
+    printf("Fichier inexistant");
     getchar();
     }
-
-}
-
 
 
 
@@ -90,18 +92,43 @@ void sauvegarder(int restant)
 {
 char chemin[50];
 
+// Saisie du nom du fichier
 printf("\nVeuillez saisir l'adresse exacte du fichier à ouvrir : \n");
 scanf("%s",chemin);
 getchar();
 
+// Ajout de l'extension
+strcat(chemin,".histo");
+
+// Ouverture en lecture pour eviter un écrasement involontaire
 FILE * fic=NULL;
 fic=fopen(chemin,"r");
+
 if(fic!=NULL)
 {
-printf("Le fichier existe déjà voulez vous l'écraser ? [Oui (O), Non (N)]\n");
-scanf("%s",choix);
-getchar();
+    fclose(fic);
+    char choix;
 
+    while(choix!='O')
+    {
+        printf("Le fichier existe déjà voulez vous l'écraser ? [Oui (O), Non (N)]\n");
+        scanf("%c",&choix);
+        getchar();
+
+        choix=toupper((int) choix);
+
+            if(choix=='N')
+            {
+            return ;
+            }
+    }
+printf("fichier détruit");
+getchar();
 }
+
+
+//fic=fopen(chemin,"w");
+//
+//fprintf(fic,"HX%s %s %d%dCRLF",param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
 
 }
