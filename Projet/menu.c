@@ -69,10 +69,9 @@ int thread_menu()
 void Nvlle_partie(){
 
     char joueur1[8]="", joueur2[8];
-    int tps_global, tps_joueur;
-    int error1=1, error2=1, error_timeG=1, error_timeJ=1;
-    char test_time[4]; /*pour détecter erreur saisie temps */
-    int i=0, cond=1;
+    int tps_global=0, tps_joueur=0;
+    int error1=1, error2=1,retour; /* retour du scanf*/
+    int cond=0;
 
     printf("\n\n\t >>>>Nouvelle partie<<<< \n");
 
@@ -111,36 +110,63 @@ void Nvlle_partie(){
    /* while(error_timeG)*/
     {
         printf("Définir le temps de la partie (en secondes):");
-        scanf("%d", &tps_global);
-      /*  sprintf(test_time, "%d", tps_global);
-        while(i < 4 && cond)
+
+
+    while (!cond)
+        {
+
+            retour = scanf("%d%*[^\n]", &tps_global);
+        printf("retour : %d\n", retour);
+        if ( !retour )
             {
-            if((test_time[i]-30 < 0) && (test_time[i]-40 < 0))
-                {
-                error_timeG = 0;
-                i++;
-                }
+            /* erreur de saisie, on vide le flux */
+            int c;
+            while ( ((c = getchar()) != '\n') && c != EOF);
 
-            else
-                {
-                error_timeG = 1;
-                cond = 0;
-                }
-
+            printf("on vous a demande de saisir un nombre\n");
+            printf("veuillez recommencer :\n");
             }
-            */
+        else
+            {
+            /* reussite de la saisie */
+            getchar(); /* on enleve le '\n' restant */
 
-
+            printf("saisie acceptee\n");
+            cond = 1;  /* sort de la boucle */
     }
 
-        printf("Le temps de la partie est de %d secondes\n", tps_global);
+  }
+
+            printf("Le temps de la partie est de %d secondes\n", tps_global);
+            cond=0; /* réinitialise cond*/
 
 
-    /*while(error_timeJ)*/
-    {
+
         printf("Définir le temps pour un coup (en secondes):");
-        scanf("%d", &tps_joueur);
-    }
+
+    while (!cond){
+
+    retour = scanf("%d%*[^\n]", &tps_joueur);
+    printf("retour : %d\n", retour);
+    if ( !retour )
+        {
+        /* erreur de saisie, on vide le flux */
+      int c;
+      while ( ((c = getchar()) != '\n') && c != EOF);
+
+      printf("on vous a demande de saisir un nombre\n");
+      printf("veuillez recommencer :\n");
+        }
+    else
+        {
+        /* reussite de la saisie */
+        getchar(); /* on enleve le '\n' restant */
+
+        printf("saisie acceptee\n");
+        cond = 1;  /* sort de la boucle */
+        }
+
+        }
 
         printf("Le temps par coup est de %d secondes\n", tps_joueur);
 
@@ -148,6 +174,7 @@ void Nvlle_partie(){
         printf("\t Début de la partie\n");
 
 
+    }
 }
 
 void pause(){}
