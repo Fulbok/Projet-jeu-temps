@@ -42,14 +42,25 @@ if(fic!=NULL)
     // Découpage
     sscanf(ligne,"%2s%8s %8s %4d%4d%4s",hx,param->joueur1,param->joueur2,&param->tps_global,&param->tps_joueur,crlf);
 
+    // Vérification pour détecter les espaces qui auraient disparus
+    sprintf(verif,"%s%s %s %04d%04d%s",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur,crlf);
+    nb_saisie=strcmp(ligne,verif);
+
+    // Vérification du HX et du CRLF
+    if (strcmp(hx,"HX")!=0 || strcmp(crlf,"CRLF")!=0 || nb_saisie!=0)
+    {
+        printf("\nLe fichier n'est pas du bon type.\n");
+        getchar();
+        return ;
+    }
+
+//    // Débug
+//    printf("%s\n%s\n%d",ligne,verif,nb_saisie);
+//    printf("\n%s ; %s ; %s ; %04d ; %04d ; %s ;\n",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur,crlf);
 
 
-    nb_saisie=printf("\n%s ; %s ; %s ; %d ; %d ; %s ;\n",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur,crlf);
 
-    printf("%d\n",nb_saisie); // 46 quand tout va bien ...
-    sprintf(verif,"%s%s %s ",hx,param->joueur1,param->joueur2);
-    nb_saisie=strncmp(ligne,verif,20);
-    printf("%20s\n%s\n%d",ligne,verif,nb_saisie);
+
 
 
     getchar();
