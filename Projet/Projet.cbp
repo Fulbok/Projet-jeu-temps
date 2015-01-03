@@ -25,6 +25,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-pthread" />
+					<Add option="-lncurses" />
 				</Linker>
 			</Target>
 		</Build>
@@ -39,6 +41,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="ouvreur.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="temps.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

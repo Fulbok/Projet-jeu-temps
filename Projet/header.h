@@ -3,6 +3,10 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#include <semaphore.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <ncurses.h>
 
 
 #define CHARGER 1
@@ -12,10 +16,12 @@
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
 
+
 //Structure étapes parties
 typedef struct etape{
     int restant;
-    char joueur[15];
+    char joueur1[9];
+    char joueur2[9];
     char coup[40];
     struct etape * ptsuiv;
 }etape;
@@ -27,16 +33,22 @@ typedef struct param_structure{
     int tps_joueur;
 }param_structure;
 
+// Variable globales
+extern param_structure * param;
+extern sem_t sem_etat;
+extern int etat_jeu;
 
 //thread time
+void * init_temps(void * restant);
 void thread_time(int tps_global, int tps_joueur);
 
 //Menu
 int thread_menu();
 void Nvlle_partie();
-void pause();
+void interruption();
 void resume();
 void quitter ();
+void jeux();
 
 
 //Ouvreur

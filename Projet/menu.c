@@ -1,5 +1,6 @@
 #include "header.h"
 
+extern param_structure * param;
 
 void thread_time( int tps_global,int tps_joueur)
     {
@@ -23,14 +24,14 @@ int thread_menu()
 
         system("clear");
 
-        printf("\t Menu du jeu : \n");
-        printf("1. Nouvelle partie\n");
-        printf("2. Charger une partie\n");
-        printf("3. Interrompre la partie & Sauvegarder\n");
-        printf("4. Pause\n");
-        printf("5. Reprendre la partie\n");
-        printf("6. Historique\n");
-        printf("7. Quitter l'application\n\n");
+        printf("\t\t Menu du jeu : \n\n");
+        printf("\t1. Nouvelle partie\n");
+        printf("\t2. Charger une partie\n");
+        printf("\t3. Interrompre la partie & Sauvegarder\n");
+        printf("\t4. Pause\n");
+        printf("\t5. Reprendre la partie\n");
+        printf("\t6. Historique\n");
+        printf("\t7. Quitter l'application\n\n\n");
 
         if(error==0)
         {
@@ -68,7 +69,7 @@ int thread_menu()
 
 void Nvlle_partie(){
 
-    char joueur1[8]="", joueur2[8];
+    char joueur1[8]="", joueur2[8]="";
     int tps_global=0, tps_joueur=0;
     int error1=1, error2=1,retour; /* retour du scanf*/
     int cond=0;
@@ -86,9 +87,10 @@ void Nvlle_partie(){
             {
             error1=0;
             }
+
      /*le nom ne doit pas dépasser 8 caractères, si c'est le cas recommence la saisie*/
      }
-
+    strcpy(param->joueur1,joueur1);
 
      while(error2)
     {
@@ -105,6 +107,7 @@ void Nvlle_partie(){
             }
      /*le nom ne doit pas dépasser 8 caractères, si c'est le cas, recommence la saisie*/
      }
+     strcpy(param->joueur2,joueur2);
 
     //Saisie différents temps de jeu.
    /* while(error_timeG)*/
@@ -138,6 +141,7 @@ void Nvlle_partie(){
   }
 
             printf("Le temps de la partie est de %d secondes\n", tps_global);
+            param->tps_global=tps_global;
             cond=0; /* réinitialise cond*/
 
 
@@ -169,18 +173,26 @@ void Nvlle_partie(){
         }
 
         printf("Le temps par coup est de %d secondes\n", tps_joueur);
+        param->tps_joueur=tps_joueur;
 
 
-        printf("\t Début de la partie\n");
-
+        printf("\n\n\t\t Début de la partie\n");
+        sleep(1);
 
     }
+
+    // On initialise le thread temps avec le temps de la partie puis on lance le jeu
+    pthread_t IDtemps;
+    pthread_create(&IDtemps,NULL,init_temps,(void *) tps_global);
+    jeux();
+
+
 }
 
-void pause(){}
+void interruption(){}
 void resume(){}
 void quitter (){
 exit(1);
 }
-
+void jeux(){while (1) {sleep(1);}}
 
