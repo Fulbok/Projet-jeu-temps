@@ -18,7 +18,7 @@ void thread_time( int tps_global,int tps_joueur)
 int thread_menu()
     {
 
-    int choix,error=1,restant;
+    int choix;
     while(1)
         {
 
@@ -33,11 +33,6 @@ int thread_menu()
         printf("\t6. Historique\n");
         printf("\t7. Quitter l'application\n\n\n");
 
-        if(error==0)
-        {
-        printf("\n\nTu ne sais pas lire abruti ?...\n\n");
-        error=1;
-        }
 
         printf("Votre choix : ");
         scanf("%d", &choix);
@@ -47,18 +42,15 @@ int thread_menu()
             {
             case 1 : Nvlle_partie();break;
             case 2 : recup_chemin(CHARGER);break;
-            case 3 : sauvegarder(restant);break;
+            case 3 : sauvegarder();break;
             case 4 : pause();break;
             case 5 : resume();break;
             case 6 : recup_chemin(HISTORIQUE);break;
             case 7 : quitter();break;
-            default :error=0;
+            default :printf("\n\nMauvaise saisie.\n\n");;
             }
 
-
         }
-
-
 
 
 
@@ -123,8 +115,7 @@ void Nvlle_partie(){
         if ( !retour )
             {
             /* erreur de saisie, on vide le flux */
-            int c;
-            while ( ((c = getchar()) != '\n') && c != EOF);
+            purger();
 
             printf("on vous a demande de saisir un nombre\n");
             printf("veuillez recommencer :\n");
@@ -155,8 +146,7 @@ void Nvlle_partie(){
     if ( !retour )
         {
         /* erreur de saisie, on vide le flux */
-      int c;
-      while ( ((c = getchar()) != '\n') && c != EOF);
+      purger();
 
       printf("on vous a demande de saisir un nombre\n");
       printf("veuillez recommencer :\n");
@@ -182,17 +172,24 @@ void Nvlle_partie(){
     }
 
     // On initialise le thread temps avec le temps de la partie puis on lance le jeu
-    pthread_t IDtemps;
-    pthread_create(&IDtemps,NULL,init_temps,(void *) tps_global);
-    jeux();
-
+    init_temps(-1);
 
 }
 
+void purger()
+{
+    int c = 0;
+    while (c != '\n' && c != EOF)
+    {
+        c = getchar();
+    }
+}
 void interruption(){}
 void resume(){}
-void quitter (){
+void quitter ()
+{
+// Gérer la libération mémoire =======================
+
 exit(1);
 }
-void jeux(){while (1) {sleep(1);}}
 

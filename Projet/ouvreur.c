@@ -99,7 +99,7 @@ void historique(FILE* fic,char* ligne)
 
 }
 
-void sauvegarder(int restant)
+void sauvegarder()
 {
 char chemin[50];
 
@@ -123,7 +123,7 @@ if(fic!=NULL)
     while(choix!='O')
     {
         printf("Le fichier existe déjà voulez vous l'écraser ? [Oui (O), Non (N)]\n");
-        scanf("%c",&choix);
+        scanf("%c%*[^\n]",&choix);
         getchar();
 
         choix=toupper((int) choix);

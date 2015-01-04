@@ -2,18 +2,30 @@
 
 
 
-void * init_temps(void * restant)
+void init_temps(int restant)
 {
-system("clear");
+if(restant==-1)
+{
+restant=param->tps_global;
+}
+void * retour=NULL;
 
-        printf("\t\t Menu du jeu : \n\n");
-        printf("\t1. Nouvelle partie\n");
-        printf("\t2. Charger une partie\n");
-        printf("\t3. Interrompre la partie & Sauvegarder\n");
-        printf("\t4. Pause\n");
-        printf("\t5. Reprendre la partie\n");
-        printf("\t6. Historique\n");
-        printf("\t7. Quitter l'application\n\n\n");
+// On prépare la liste chainé qui sa faire l'historique de la partie
+etape * nouveau=malloc(sizeof(etape));
+param->debut_jeu=nouveau;
+param->fin_jeu=nouveau;
+nouveau->ptsuiv=NULL;
+
+// Début du jeu
+etat_jeu=1;
+
+
+pthread_t IDjeu;
+pthread_create(&IDjeu,NULL,jeu,retour);
+
+// On attend que le thread jeu affiche le menu.
+sem_wait(&sem_synch_temps);
+
 
 // Initialisation ncurses
 //WINDOW* mywin;
@@ -22,27 +34,20 @@ system("clear");
 
  // initscr();
 
-printf("Partie en cours : \n");
+
 time_t temps_coup=time(NULL);
 time_t temps_partie=time(NULL);
-int cond=1;
-double actuel,last=0;
+int cond=1,actuel=0;
+double last=0;
 
 while (cond)
     {
     sem_wait(&sem_etat);
 
-        if (etat_jeu==2) // Changement de joueur
+        if (etat_jeu==5) // Sasie des instructions en cours
         {
-        temps_coup=time(NULL);
-        }
-        else if (etat_jeu==5) // Pause
-        {
-        // Attente signal de reprise
-        }
-        else if (etat_jeu==6) // Fin de partie
-        {
-        etat_jeu=0;
+          // gérer sauvegarde et retour du thread jeu.
+          pthread_join(IDjeu,retour);
         }
 
         while(last>difftime(time(NULL),temps_coup)){usleep(100000);}
@@ -50,6 +55,7 @@ while (cond)
 
         if (actuel>=param->tps_joueur)
         {
+        // A faire arret thread jeu
         etat_jeu=3;
         cond=0;
         printf("plus de temps coup");
@@ -61,9 +67,11 @@ while (cond)
         printf("plus de temps partie");
         }
 
-        printf("%c8\x1b[13;0H", '\x1b');
-        printf("Temps : %0.0lf\n",last);
+        printf("%c7", 27);
 
+        printf("\x1b[9;0H", 27);
+        printf("Temps : %0.0lf\n",last);
+        printf("%c8", 27);
 
         last+=1;
 
@@ -73,6 +81,5 @@ while (cond)
 
 
     }
-fflush(stdout);
-pthread_exit(1);
+
 }
