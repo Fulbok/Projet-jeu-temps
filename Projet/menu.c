@@ -47,7 +47,7 @@ int thread_menu()
             case 5 : resume();break;
             case 6 : recup_chemin(HISTORIQUE);break;
             case 7 : quitter();break;
-            default :printf("\n\nMauvaise saisie.\n\n");;
+            default :printf("\n\nMauvaise saisie.\n\n");break;
             }
 
         }
@@ -61,8 +61,10 @@ int thread_menu()
 
 void Nvlle_partie(){
 
+
     char joueur1[8]="", joueur2[8]="";
     int tps_global=0, tps_joueur=0;
+
     int error1=1, error2=1,retour; /* retour du scanf*/
     int cond=0;
 
@@ -92,7 +94,7 @@ void Nvlle_partie(){
             {
             error2=0;
             }
-        if(strcmp(joueur1,joueur2)==0)
+        if(strcmp(param->joueur1,joueur2)==0)
             {
             printf("Euuh, c'est un jeu pour 2 joueurs, tu ne peux pas jouer contre toi-même.\n");
             error2=1;
@@ -110,7 +112,7 @@ void Nvlle_partie(){
     while (!cond)
         {
 
-            retour = scanf("%d%*[^\n]", &tps_global);
+            retour = scanf("%d%*[^\n]", tps_global);
         printf("retour : %d\n", retour);
         if ( !retour )
             {
@@ -131,8 +133,10 @@ void Nvlle_partie(){
 
   }
 
+
             printf("Le temps de la partie est de %d secondes\n", tps_global);
             param->tps_global=tps_global;
+
             cond=0; /* réinitialise cond*/
 
 
@@ -141,7 +145,7 @@ void Nvlle_partie(){
 
     while (!cond){
 
-    retour = scanf("%d%*[^\n]", &tps_joueur);
+    retour = scanf("%d%*[^\n]", tps_joueur);
     printf("retour : %d\n", retour);
     if ( !retour )
         {
@@ -162,9 +166,9 @@ void Nvlle_partie(){
 
         }
 
+
         printf("Le temps par coup est de %d secondes\n", tps_joueur);
         param->tps_joueur=tps_joueur;
-
 
         printf("\n\n\t\t Début de la partie\n");
         sleep(1);
