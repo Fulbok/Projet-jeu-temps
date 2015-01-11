@@ -2,19 +2,26 @@
 
 
 
-void init_temps(int restant)
+void init_temps()
 {
-if(restant==-1)
+int restant;
+etape * nouveau;
+
+if(param->fin_jeu==NULL)
 {
-restant=param->tps_global;
+    restant=param->tps_global;
+}
+else
+{
+    restant=param->fin_jeu->restant;
 }
 void * retour=NULL;
 
 // On prépare la liste chainé qui sa faire l'historique de la partie
-etape * nouveau=malloc(sizeof(etape));
-param->debut_jeu=nouveau;
-param->fin_jeu=nouveau;
-nouveau->ptsuiv=NULL;
+//etape * nouveau=malloc(sizeof(etape));
+//param->debut_jeu=nouveau;
+//param->fin_jeu=nouveau;
+//nouveau->ptsuiv=NULL;
 
 // Début du jeu
 etat_jeu=1;
@@ -38,7 +45,7 @@ sem_wait(&sem_synch_temps);
 time_t temps_coup=time(NULL);
 time_t temps_partie=time(NULL);
 int cond=1,actuel=0;
-double last=0;
+double last=0,retard_global=0,retard_coup=0;
 
 while (cond)
     {
@@ -46,8 +53,27 @@ while (cond)
 
         if (etat_jeu==5) // Sasie des instructions en cours
         {
+            time_t temps_retard=time(NULL);
           // gérer sauvegarde et retour du thread jeu.
-          pthread_join(IDjeu,retour);
+            pthread_join(IDjeu,retour);
+
+            if (param->debut_jeu==NULL)
+            {
+                nouveau=malloc(sizeof(etape));
+                param->debut_jeu=nouveau;
+                param->fin_jeu=nouveau;
+                nouveau->ptsuiv=NULL;
+            }
+            else
+            {
+                param->fin_jeu->ptsuiv=malloc(sizeof(etape));
+                param->fin_jeu=param->fin_jeu->ptsuiv;
+                param->fin_jeu->ptsuiv=NULL;
+                nouveau=param->fin_jeu;
+            }
+
+
+            retard+=difftime(time(NULL),temps_retard);
         }
 
         while(last>difftime(time(NULL),temps_coup)){usleep(100000);}
@@ -55,7 +81,7 @@ while (cond)
 
         if (actuel>=param->tps_joueur)
         {
-        // A faire arret thread jeu
+        // A faire arret thread jeu free mémoire et annoncer loser
         etat_jeu=3;
         cond=0;
         printf("plus de temps coup");
@@ -67,17 +93,19 @@ while (cond)
         printf("plus de temps partie");
         }
 
-        printf("%c7", 27);
-
-        printf("\x1b[9;0H", 27);
-        printf("Temps : %0.0lf\n",last);
-        printf("%c8", 27);
+//        printf("%c7", 27);
+        // A MODIFIER METTRE LE TEMPS RESTANT PAR COUP
+        printf("%c7\x1b[9;0H", '\x1b');
+        printf("Temps restant pour la partie : %0.0lf\n",last);
+        printf("Temps restant pour le coup: %0.0lf\n",last);
+        printf("%c8", '\x1b');
+        fflush(stdout);
 
         last+=1;
 
 
         sem_post(&sem_etat);
-        usleep(500000);
+        usleep(700000);
 
 
     }

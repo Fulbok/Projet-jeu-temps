@@ -3,14 +3,8 @@
 
 void * jeu(void * retour)
 {
-system("clear");
 
-        printf("\t\t Menu du jeu : \n\n");
-        printf("\t1. Interrompre la partie & Sauvegarder\n");
-        printf("\t2. Pause\n");
-        printf("\t7. Quitter l'application\n\n\n");
-
-printf("Partie en cours : \n\n");
+afficher_menu(JEU);
 
 // On lance les chronos
 sem_post(&sem_synch_temps);

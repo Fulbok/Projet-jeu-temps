@@ -13,6 +13,10 @@
 #define HISTORIQUE 2
 #define SAUVEGARDER 3
 
+#define MENU 1
+#define JEU 2
+#define PAUSE 3
+
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
 
@@ -43,7 +47,7 @@ extern sem_t sem_synch_temps;
 extern int etat_jeu;
 
 // Gestion du temps
-void init_temps(int restant);
+void init_temps();
 
 // Thread Jeu
 void * jeu(void * retour);
@@ -51,10 +55,10 @@ void * jeu(void * retour);
 // Menu
 int thread_menu();
 void Nvlle_partie();
-void interruption();
-void resume();
-void quitter ();
+void afficher_menu(int type);
 void purger();
+void liberer()
+void quitter ();
 
 
 
@@ -64,15 +68,6 @@ void recup_chemin(int nb);
 void charger(FILE* fic,char* ligne);
 void historique(FILE* fic,char* ligne);
 void sauvegarder();
-
-
-
-
-
-
-
-
-
 
 
 

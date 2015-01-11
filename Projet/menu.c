@@ -22,19 +22,8 @@ int thread_menu()
     while(1)
         {
 
-        system("clear");
+        afficher_menu(MENU);
 
-        printf("\t\t Menu du jeu : \n\n");
-        printf("\t1. Nouvelle partie\n");
-        printf("\t2. Charger une partie\n");
-        printf("\t3. Interrompre la partie & Sauvegarder\n");
-        printf("\t4. Pause\n");
-        printf("\t5. Reprendre la partie\n");
-        printf("\t6. Historique\n");
-        printf("\t7. Quitter l'application\n\n\n");
-
-
-        printf("Votre choix : ");
         scanf("%d", &choix);
         getchar();
 
@@ -42,12 +31,9 @@ int thread_menu()
             {
             case 1 : Nvlle_partie();break;
             case 2 : recup_chemin(CHARGER);break;
-            case 3 : sauvegarder();break;
-            case 4 : pause();break;
-            case 5 : resume();break;
-            case 6 : recup_chemin(HISTORIQUE);break;
-            case 7 : quitter();break;
-            default :printf("\n\nMauvaise saisie.\n\n");break;
+            case 3 : recup_chemin(HISTORIQUE);break;
+            case 4 : quitter();break;
+            default :printf("\n\nMauvaise saisie.\n\n");;
             }
 
         }
@@ -176,7 +162,7 @@ void Nvlle_partie(){
     }
 
     // On initialise le thread temps avec le temps de la partie puis on lance le jeu
-    init_temps(-1);
+    init_temps();
 
 }
 
@@ -188,11 +174,62 @@ void purger()
         c = getchar();
     }
 }
-void interruption(){}
-void resume(){}
+
+void afficher_menu(int type)
+{
+system("clear");
+
+if(type==MENU)
+{
+    printf("\t\t Menu du jeu : \n\n");
+    printf("\t1. Nouvelle partie\n");
+    printf("\t2. Charger une partie\n");
+    printf("\t3. Historique\n");
+    printf("\t4. Quitter l'application\n\n\n");
+
+    printf("Votre choix : ");
+}
+if(type==JEU)
+{
+    printf("\t\t Menu du jeu : \n\n");
+    printf("\t1. Interrompre la partie & Sauvegarder\n");
+    printf("\t2. Pause\n");
+    printf("\t4. Quitter l'application\n\n\n");
+
+    printf("Partie en cours : \n\n\n");
+}
+if(type==PAUSE)
+{
+    printf("\t\t Menu du jeu : \n\n");
+    printf("\t1. Interrompre la partie & Sauvegarder\n");
+    printf("\t2. Reprendre la partie\n");
+    printf("\t4. Quitter l'application\n\n\n");
+
+    printf("Partie en cours : \n\n\n");
+}
+
+}
+
+void liberer()
+{
+
+etape* pt1= param->debut_jeu; //pour les aérodromes
+while(pt1!=NULL)
+{
+    etape* pt2=pt1->ptsuiv;
+    free(pt1);
+    pt1=pt2;
+}
+
+param->debut_jeu=NULL;
+param->fin_jeu=NULL;
+
+}
+
+
 void quitter ()
 {
-// Gérer la libération mémoire =======================
+liberer();
 
 exit(1);
 }

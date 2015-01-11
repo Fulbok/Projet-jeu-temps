@@ -103,6 +103,13 @@ void sauvegarder()
 {
 char chemin[50];
 
+if(param->debut_jeu==NULL)
+{
+printf("Pas de données à sauvegarder.");
+getchar();
+return 0;
+}
+
 // Saisie du nom du fichier
 printf("\nVeuillez saisir l'adresse exacte du fichier à ouvrir : \n");
 scanf("%s",chemin);
@@ -133,6 +140,15 @@ if(fic!=NULL)
             return ;
             }
     }
+
+fic=fopen(chemin,"w");
+
+if(fic!=NULL)
+{
+
+fprintf(fic,"HX%s %s %d%dCRLF",param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
+
+}
 printf("fichier détruit");
 getchar();
 }
