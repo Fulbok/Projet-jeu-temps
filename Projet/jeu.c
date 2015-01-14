@@ -4,14 +4,14 @@
 void * jeu(void * retour)
 {
 
-afficher_menu(JEU);
+afficher_menu(JEU_);
 
 // On lance les chronos
 sem_post(&sem_synch_temps);
 
 // On vide le buffer
     char saisie[11];
-    scanf("%10c",saisie);
+    scanf("%10s",saisie);
     getchar();
 //getchar();
 //purger();
@@ -46,7 +46,7 @@ while (1)
     {
         return (void *) 4;
     }
-    else if (strcmp(saisie,"NON VALIDE")==0)
+    else if (strcmp(saisie,"MAUVAIS")==0)
     {
         printf("Coup non valide.\n");
     }

@@ -16,13 +16,15 @@ void thread_time( int tps_global,int tps_joueur)
     }
 
 int thread_menu()
-    {
+{
+
+
 
     int choix;
     while(1)
         {
 
-        afficher_menu(MENU);
+        afficher_menu(MENU_);
 
         scanf("%d", &choix);
         getchar();
@@ -30,8 +32,8 @@ int thread_menu()
         switch(choix)
             {
             case 1 : Nvlle_partie();break;
-            case 2 : recup_chemin(CHARGER);break;
-            case 3 : recup_chemin(HISTORIQUE);break;
+            case 2 : recup_chemin(CHARGER_);break;
+            case 3 : recup_chemin(HISTORIQUE_);break;
             case 4 : quitter();break;
             default :printf("\n\nMauvaise saisie.\n\n");;
             }
@@ -98,8 +100,9 @@ void Nvlle_partie(){
     while (!cond)
         {
 
-            retour = scanf("%d%*[^\n]", tps_global);
-        printf("retour : %d\n", retour);
+            retour = scanf("%d%*[^\n]", &tps_global);
+            printf("retour : %d\n", retour);
+
         if ( !retour )
             {
             /* erreur de saisie, on vide le flux */
@@ -131,7 +134,7 @@ void Nvlle_partie(){
 
     while (!cond){
 
-    retour = scanf("%d%*[^\n]", tps_joueur);
+    retour = scanf("%d%*[^\n]", &tps_joueur);
     printf("retour : %d\n", retour);
     if ( !retour )
         {
@@ -179,7 +182,7 @@ void afficher_menu(int type)
 {
 system("clear");
 
-if(type==MENU)
+if(type==MENU_)
 {
     printf("\t\t Menu du jeu : \n\n");
     printf("\t1. Nouvelle partie\n");
@@ -189,7 +192,7 @@ if(type==MENU)
 
     printf("Votre choix : ");
 }
-if(type==JEU)
+if(type==JEU_)
 {
     printf("\t\t Menu du jeu : \n\n");
     printf("\t1. Interrompre la partie & Sauvegarder\n");
@@ -198,7 +201,7 @@ if(type==JEU)
 
     printf("Partie en cours : \n\n\n");
 }
-if(type==PAUSE)
+if(type==PAUSE_)
 {
     printf("\t\t Menu du jeu : \n\n");
     printf("\t1. Interrompre la partie & Sauvegarder\n");
@@ -223,7 +226,10 @@ while(pt1!=NULL)
 
 param->debut_jeu=NULL;
 param->fin_jeu=NULL;
-
+strcpy(param->joueur1,"");
+strcpy(param->joueur2,"");
+param->tps_global=0;
+param->tps_joueur=0;
 }
 
 

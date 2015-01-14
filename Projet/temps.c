@@ -4,7 +4,7 @@
 
 void init_temps()
 {
-int restant;
+int restant=0,tour=0; // Tour du joueur 1 : tour%2=0 sinon tour%2=1
 etape * nouveau;
 
 if(param->fin_jeu==NULL)
@@ -14,6 +14,13 @@ if(param->fin_jeu==NULL)
 else
 {
     restant=param->fin_jeu->restant;
+
+    // Si le dernier à avoir joué est le joueur 1 c'est au joueur 2
+    if(strcmp(param->joueur1,param->fin_jeu->joueur)==0)
+    {
+        tour=1;
+    }
+
 }
 void * retour=NULL;
 
@@ -26,7 +33,7 @@ void * retour=NULL;
 // Début du jeu
 etat_jeu=1;
 
-
+// Création du thread de saisie
 pthread_t IDjeu;
 pthread_create(&IDjeu,NULL,jeu,retour);
 
@@ -41,7 +48,7 @@ sem_wait(&sem_synch_temps);
 
  // initscr();
 
-
+// On initialise les timers
 time_t temps_coup=time(NULL);
 time_t temps_partie=time(NULL);
 int cond=1,actuel=0;
@@ -49,6 +56,7 @@ double last=0,retard_global=0,retard_coup=0;
 
 while (cond)
     {
+    retard_coup=0;
     sem_wait(&sem_etat);
 
         if (etat_jeu==5) // Sasie des instructions en cours
@@ -73,7 +81,7 @@ while (cond)
             }
 
 
-            retard+=difftime(time(NULL),temps_retard);
+            retard_global+=difftime(time(NULL),temps_retard);
         }
 
         while(last>difftime(time(NULL),temps_coup)){usleep(100000);}
@@ -105,7 +113,7 @@ while (cond)
 
 
         sem_post(&sem_etat);
-        usleep(700000);
+        usleep(600000);
 
 
     }

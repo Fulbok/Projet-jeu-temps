@@ -6,16 +6,18 @@
 #include <semaphore.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <ncurses.h>
 
 
-#define CHARGER 1
-#define HISTORIQUE 2
-#define SAUVEGARDER 3
+#define CHARGER_ 1
+#define HISTORIQUE_ 2
+#define SAUVEGARDER_ 3
 
-#define MENU 1
-#define JEU 2
-#define PAUSE 3
+#define MENU_ 1
+#define JEU_ 2
+#define PAUSE_ 3
+
+#define ERREUR 0
+#define OK 1
 
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
@@ -24,8 +26,7 @@
 // Structure étapes parties
 typedef struct etape{
     int restant;
-    char joueur1[9];
-    char joueur2[9];
+    char joueur[9];
     char coup[11];
     struct etape * ptsuiv;
 }etape;
@@ -57,16 +58,14 @@ int thread_menu();
 void Nvlle_partie();
 void afficher_menu(int type);
 void purger();
-void liberer()
+void liberer();
 void quitter ();
 
 
 
 
 // Ouvreur
-void recup_chemin(int nb);
-void charger(FILE* fic,char* ligne);
-void historique(FILE* fic,char* ligne);
+void recup_chemin(int type);
 void sauvegarder();
 
 
