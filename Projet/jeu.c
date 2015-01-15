@@ -6,57 +6,102 @@ void * jeu(void * retour)
 
 afficher_menu(JEU_);
 
-// On lance les chronos
 sem_post(&sem_synch_temps);
 
-// On vide le buffer
-    char saisie[11];
-    scanf("%10s",saisie);
-    getchar();
-//getchar();
-//purger();
+    while (1)
+    {
+        char saisie[11];
+        int i;
 
-// On récupère le sémaphore pour modifier l'état
-sem_wait(&sem_etat);
-etat_jeu=5;
-sem_post(&sem_etat);
+        scanf("%10s",saisie);
+        purger();
+
+        for (i=0;saisie[i]!='\0';i++)
+        {
+            saisie[i] = toupper(saisie[i]);
+        }
+
+        if (saisie[1]=='\0' && saisie[0]==2)
+        {
+            sem_wait(&sem_etat);
+            etat_jeu=3;
+            sem_post(&sem_etat);
+            saisie[0]=pause();
+            saisie[1]='\0';
+            sem_post(&sem_synch_temps);
+        }
+
+        if (saisie[1]=='\0' && saisie[0]==1 )
+        {
+            sem_wait(&sem_etat);
+            etat_jeu=2;
+            sem_post(&sem_etat);
+            return NULL;
+        }
+        else if (saisie[1]=='\0' && saisie[0]==3)
+        {
+            sem_wait(&sem_etat);
+            etat_jeu=4;
+            sem_post(&sem_etat);
+            return NULL;
+        }
+        else if (strcmp(saisie,"GAGNANT")==0)
+        {
+            sem_wait(&sem_etat);
+            etat_jeu=5;
+            sem_post(&sem_etat);
+            return NULL;
+        }
+        else if (strcmp(saisie,"VALIDE")==0)
+        {
+            sem_wait(&sem_etat);
+            etat_jeu=6;
+            sem_post(&sem_etat);
+
+            // On attend l'allocation de la liste puis l'on saisie le coup
+            sem_wait(&sem_synch_jeu);
+            strcpy(param->fin_jeu->coup,saisie);
+            sem_post(&sem_synch_temps);
+            sem_wait(&sem_synch_jeu);
+        }
+        else if (strcmp(saisie,"MAUVAIS")==0)
+        {
+            printf("Ce coup n'est pas autorisé.\n");
+        }
+        else
+        {
+            printf("Saisie incorrecte.\n");
+        }
+    }
+
+}
+
+int pause()
+{
+int erreur=0, saisie;
 
 while (1)
 {
+    afficher_menu(PAUSE_);
 
-//    purger();
-
-    int i;
-    for (i=0;saisie[i]!='\0';i++)
+    if(erreur)
     {
-        saisie[i] = toupper(saisie[i]);
+        printf("%c7\x1b[8;18H", '\x1b');
+        printf("Erreur de saisie.%c8", '\x1b');
+        fflush(stdout);
+        erreur=0;
     }
 
-    printf("\nSaisie : %s\n",saisie);
+    scanf("%d",&saisie);
+    purger();
 
-    if (saisie[1]=='\0' && (saisie[0]==1 || saisie[0]==2 || saisie[0]==7))
+    if (saisie==1 || saisie==2 || saisie==3)
     {
-        return (void *) saisie[0];
-    }
-    else if (strcmp(saisie,"GAGNANT")==0)
-    {
-        return (void *) 3;
-    }
-    else if (strcmp(saisie,"VALIDE")==0)
-    {
-        return (void *) 4;
-    }
-    else if (strcmp(saisie,"MAUVAIS")==0)
-    {
-        printf("Coup non valide.\n");
+        return saisie;
     }
     else
     {
-        printf("Saisie incorrecte.\n");
+        erreur=1;
     }
-
-    scanf("%10s",saisie);
-    getchar();
 }
-
 }

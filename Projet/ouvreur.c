@@ -2,7 +2,7 @@
 
 extern param_structure * param;
 
-void recup_chemin(int type)
+int recup_chemin(int type)
 {
 printf("Les fichiers disponibles dans ce répertoire sont : \n");
 system("find . -name *.histo -print");
@@ -81,7 +81,6 @@ if(fic!=NULL)
 
         // Vérification de lecture
         if(restant>restant_precedant || assigne !=3 || strcmp(joueur,joueur_precedant)==0 || (strcmp(joueur,param->joueur1)==0 && strcmp(joueur,param->joueur2)==0))
-
         {
             printf("Une erreur est survenue dans le fichier ligne %d.\n assigne=%d , restant=%d, joueur=%s, coup=%s",i,assigne,restant,joueur,coup);
             purger();
@@ -167,7 +166,7 @@ return OK;
 
 
 
-void sauvegarder()
+int sauvegarder()
 {
 char chemin[50];
 
@@ -238,7 +237,7 @@ if(fic!=NULL)
 }
 else
 {
-    printf("\nUne erreure c'est produite lors de la création du fichier.\n");
+    printf("\nUne erreur c'est produite lors de la création du fichier.\n");
     purger();
     return ERREUR;
 }

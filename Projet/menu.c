@@ -2,49 +2,28 @@
 
 extern param_structure * param;
 
-void thread_time( int tps_global,int tps_joueur)
-    {
-
-
-    //récup temps
-    time_t t;
-    char *date;
-    t = time(NULL);
-    date = ctime(&t);
-    printf("%s\n", date);
-
-    }
 
 int thread_menu()
 {
 
-
-
     int choix;
     while(1)
-        {
-
+    {
         afficher_menu(MENU_);
 
         scanf("%d", &choix);
-        getchar();
+        purger();
 
         switch(choix)
-            {
+        {
             case 1 : Nvlle_partie();break;
             case 2 : recup_chemin(CHARGER_);break;
             case 3 : recup_chemin(HISTORIQUE_);break;
             case 4 : quitter();break;
-            default :printf("\n\nMauvaise saisie.\n\n");;
-            }
-
+            default :printf("\n\nMauvaise saisie.\n\n");
         }
-
-
-
     }
-
-
+}
 
 
 void Nvlle_partie(){
@@ -63,7 +42,7 @@ void Nvlle_partie(){
     {
         printf("Nom joueur 1 (doit être inférieur à 8 caractères):");
         scanf("%s", joueur1);
-        getchar();
+        purger();
 
         if((strlen(joueur1) >= 1) && (strlen(joueur1) <= 8) )
             {
@@ -78,6 +57,7 @@ void Nvlle_partie(){
     {
         printf("Nom joueur 2 (doit être inférieur à 8 caractères):");
         scanf("%s", joueur2);
+        purger();
         if((strlen(joueur2) >= 1) && (strlen(joueur2) <= 8))
             {
             error2=0;
@@ -98,42 +78,39 @@ void Nvlle_partie(){
 
 
     while (!cond)
-        {
+    {
+        retour = scanf("%d%*[^\n]", &tps_global);
+        printf("retour : %d\n", retour);
 
-            retour = scanf("%d%*[^\n]", &tps_global);
-            printf("retour : %d\n", retour);
+    if ( !retour )
+    {
+        /* erreur de saisie, on vide le flux */
+        purger();
 
-        if ( !retour )
-            {
-            /* erreur de saisie, on vide le flux */
-            purger();
+        printf("on vous a demande de saisir un nombre\n");
+        printf("veuillez recommencer :\n");
+    }
+    else
+    {
+        /* reussite de la saisie */
+        getchar(); /* on enleve le '\n' restant */
 
-            printf("on vous a demande de saisir un nombre\n");
-            printf("veuillez recommencer :\n");
-            }
-        else
-            {
-            /* reussite de la saisie */
-            getchar(); /* on enleve le '\n' restant */
-
-            printf("saisie acceptee\n");
-            cond = 1;  /* sort de la boucle */
+        printf("saisie acceptee\n");
+        cond = 1;  /* sort de la boucle */
     }
 
-  }
+    }
 
 
-            printf("Le temps de la partie est de %d secondes\n", tps_global);
-            param->tps_global=tps_global;
+    printf("Le temps de la partie est de %d secondes\n", tps_global);
+    param->tps_global=tps_global;
 
-            cond=0; /* réinitialise cond*/
+    cond=0; /* réinitialise cond*/
 
+    printf("Définir le temps pour un coup (en secondes):");
 
-
-        printf("Définir le temps pour un coup (en secondes):");
-
-    while (!cond){
-
+    while (!cond)
+    {
     retour = scanf("%d%*[^\n]", &tps_joueur);
     printf("retour : %d\n", retour);
     if ( !retour )
@@ -197,7 +174,7 @@ if(type==JEU_)
     printf("\t\t Menu du jeu : \n\n");
     printf("\t1. Interrompre la partie & Sauvegarder\n");
     printf("\t2. Pause\n");
-    printf("\t4. Quitter l'application\n\n\n");
+    printf("\t3. Quitter l'application\n\n\n");
 
     printf("Partie en cours : \n\n\n");
 }
@@ -206,9 +183,9 @@ if(type==PAUSE_)
     printf("\t\t Menu du jeu : \n\n");
     printf("\t1. Interrompre la partie & Sauvegarder\n");
     printf("\t2. Reprendre la partie\n");
-    printf("\t4. Quitter l'application\n\n\n");
+    printf("\t3. Quitter l'application\n\n\n");
 
-    printf("Partie en cours : \n\n\n");
+    printf("Partie en pause : \n\n\n");
 }
 
 }

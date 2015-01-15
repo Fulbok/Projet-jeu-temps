@@ -52,6 +52,8 @@ void init_temps();
 
 // Thread Jeu
 void * jeu(void * retour);
+int pause();
+
 
 // Menu
 int thread_menu();
@@ -62,11 +64,9 @@ void liberer();
 void quitter ();
 
 
-
-
 // Ouvreur
-void recup_chemin(int type);
-void sauvegarder();
+int recup_chemin(int type);
+int sauvegarder();
 
 
 

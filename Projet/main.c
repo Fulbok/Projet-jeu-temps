@@ -4,11 +4,12 @@ param_structure * param = NULL;
 // Valeur de état :
 // 0=pas de partie
 // 1:partie en cours
-    // 2:changement de joueur
-    // 3:plus de temps pour le coup
-    // 4:plus de temps pour la partie
-// 5:pause
-    // 6:fin de partie
+// 2:quitter et sauvegarder
+// 3:pause
+// 4:quitter
+// 5:coup gagnant
+// 6:coup valide
+
 int etat_jeu=0;
 sem_t sem_etat;
 sem_t sem_synch_jeu;
