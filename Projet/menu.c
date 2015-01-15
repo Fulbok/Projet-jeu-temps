@@ -6,20 +6,20 @@ extern param_structure * param;
 int thread_menu()
 {
 
-    int choix;
+    char choix;
     while(1)
     {
         afficher_menu(MENU_);
 
-        scanf("%d", &choix);
+        scanf("%1c", &choix);
         purger();
 
         switch(choix)
         {
-            case 1 : Nvlle_partie();break;
-            case 2 : recup_chemin(CHARGER_);break;
-            case 3 : recup_chemin(HISTORIQUE_);break;
-            case 4 : quitter();break;
+            case '1' : Nvlle_partie();break;
+            case '2' : recup_chemin(CHARGER_);break;
+            case '3' : recup_chemin(HISTORIQUE_);break;
+            case '4' : quitter();break;
             default :printf("\n\nMauvaise saisie.\n\n");
         }
     }

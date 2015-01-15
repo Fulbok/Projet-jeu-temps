@@ -244,7 +244,7 @@ else
 
 fclose(fic);
 
-printf("Sauvegarde Réussie.\n");
+printf("Sauvegarde Réussie.\nAppuyer sur Entrée pour continuer...\n");
 purger();
 return OK;
 }
