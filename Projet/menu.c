@@ -158,6 +158,7 @@ void purger()
 void afficher_menu(int type)
 {
 system("clear");
+fflush(stdout);
 
 if(type==MENU_)
 {
@@ -176,7 +177,8 @@ if(type==JEU_)
     printf("\t2. Pause\n");
     printf("\t3. Quitter l'application\n\n\n");
 
-    printf("Partie en cours : \n\n\n");
+    printf("Partie en cours : \n\n\n\n\t   ");
+    commandes();
 }
 if(type==PAUSE_)
 {
@@ -190,10 +192,24 @@ if(type==PAUSE_)
 
 }
 
+void commandes()
+{
+    printf("%c7\x1b[20;0H", '\x1b');
+    printf("Commandes : \n");
+    printf("/valide  : joue un coup valide.\n");
+    printf("/mauvais : tente de jouer un coup non valide.\n");
+    printf("/gagnant : joue un coup gagnant.");
+    printf("%c8", '\x1b');
+    fflush(stdout);
+
+    return;
+}
+
 void liberer()
 {
 
-etape* pt1= param->debut_jeu; //pour les aérodromes
+// Libération de la mémoire et réinitialisation des variables
+etape* pt1= param->debut_jeu;
 while(pt1!=NULL)
 {
     etape* pt2=pt1->ptsuiv;

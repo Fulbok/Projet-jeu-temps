@@ -4,8 +4,9 @@ extern param_structure * param;
 
 int recup_chemin(int type)
 {
-printf("Les fichiers disponibles dans ce répertoire sont : \n");
-system("find . -name *.histo -print");
+printf("\nLes fichiers disponibles dans ce répertoire sont : \n");
+//system("find . -name *.histo");
+system("ls -R | grep .histo$");
 
 // nb représente la variable qui va déterminer s'il faut charger ou afficher le fichier.
 if (type!=CHARGER_ && type!=HISTORIQUE_)
@@ -15,7 +16,6 @@ if (type!=CHARGER_ && type!=HISTORIQUE_)
 }
 
 char chemin[100];
-int n;
 
 // Saisie du nom du fichier
 printf("\nVeuillez saisir l'adresse du fichier à ouvrir (sans l'extension) : \n");
@@ -34,22 +34,21 @@ fic=fopen(chemin,"r");
 if(fic!=NULL)
 {
     int nb_saisie=0;
-    char hx[2],crlf[4],ligne[100],verif[100];
+    char hx[2],ligne[100],verif[100];
 
     // Lecture de la première ligne
     fscanf(fic,"%[^\n]",ligne);
     fgetc(fic);
-    printf("%s",ligne);
 
     // Découpage
-    sscanf(ligne,"%2s%8s %8s %4d%4d%4s",hx,param->joueur1,param->joueur2,&param->tps_global,&param->tps_joueur,crlf);
+    sscanf(ligne,"%2s%8s %8s %4d%4d",hx,param->joueur1,param->joueur2,&param->tps_global,&param->tps_joueur);
 
     // Vérification pour détecter les espaces qui auraient disparus
-    sprintf(verif,"%s%s %s %04d%04d%s",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur,crlf);
+    sprintf(verif,"%s%s %s %04d%04d",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
     nb_saisie=strcmp(ligne,verif);
 
-    // Vérification du HX et du CRLF
-    if (strcmp(hx,"HX")!=0 || strcmp(crlf,"CRLF")!=0 || nb_saisie!=0)
+    // Vérification du HX
+    if (strcmp(hx,"HX")!=0 || nb_saisie!=0)
     {
         printf("\nLe fichier n'est pas du bon format.\n");
         purger();
@@ -65,10 +64,8 @@ if(fic!=NULL)
     fscanf(fic,"%[^\n]",ligne);
     fgetc(fic);
 
-    while(strcmp(ligne,"FIN")!=0 && strcmp(ligne,"FINCRLF")!=0 && strcmp(ligne,"FINCRLF")!=0)
+    while(strcmp(ligne,"FIN")!=0)
     {
-    printf("\nLigne lue : %s\n",ligne);
-
         // Test si la fin du fichier est incorrecte
         if(ligne==EOF)
         {
@@ -140,13 +137,6 @@ if(fic!=NULL)
     }
     else
     {
-        // DEBUG POUR VERIFIER LA LISTE CHAINEE
-//            printf("\n\tContenue de la liste chainée.\n");purger();
-//            nouveau=param->debut_jeu;
-//            while(nouveau!=NULL)
-//            {printf("%s joue %s, il reste %d sesondes\n",nouveau->joueur,nouveau->coup,nouveau->restant);
-//             nouveau=nouveau->ptsuiv;}
-
         // Début du jeu
         printf("\n\tLa partie va se lancer, appuyer sur Entrée...\n");
         purger();
@@ -218,17 +208,17 @@ fic=fopen(chemin,"w");
 if(fic!=NULL)
 {
     // Ecriture de la première ligne
-    fprintf(fic,"HX%8s %8s %d%dCRLF",param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
+    fprintf(fic,"HX%8s %8s %04d%04d\n",param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
 
     etape * nouveau = param->debut_jeu;
 
     // Toute les lignes suivantes
     while(nouveau!=NULL)
     {
-        fprintf(fic,"%4d%8s%sCRLF",nouveau->restant,nouveau->joueur,nouveau->coup);
+        fprintf(fic,"%04d%8s%s\n",nouveau->restant,nouveau->joueur,nouveau->coup);
         nouveau=nouveau->ptsuiv;
     }
-    fprintf(fic,"FINCRLF");
+    fprintf(fic,"FIN");
 
     // Libération de la mémoire dynamique
     liberer();

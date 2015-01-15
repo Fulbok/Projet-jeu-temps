@@ -49,11 +49,11 @@ extern int etat_jeu;
 
 // Gestion du temps
 void init_temps();
+void commandes();
 
 // Thread Jeu
 void * jeu(void * retour);
-int pause();
-
+char pause_jeu();
 
 // Menu
 int thread_menu();
@@ -63,12 +63,9 @@ void purger();
 void liberer();
 void quitter ();
 
-
 // Ouvreur
 int recup_chemin(int type);
 int sauvegarder();
-
-
 
 
 #endif

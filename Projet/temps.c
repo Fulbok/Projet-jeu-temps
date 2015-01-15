@@ -37,10 +37,10 @@ sem_wait(&sem_synch_temps);
 // On initialise les timers
 time_t temps_coup=time(NULL);
 time_t temps_partie=time(NULL);
-int cond=1,actuel=0;
+int actuel=0;
 double affiche=0,retard_global=0,retard_coup=0,retard=0;
 
-while (cond)
+while (1)
     {
     sem_wait(&sem_etat);
 
@@ -61,23 +61,48 @@ while (cond)
         {
         time_t temps_retard=time(NULL);
         sem_wait(&sem_synch_temps);
-        retard=difftime(time(NULL),temps_retard);
 
-        retard_coup+=retard;
-        retard_global+=retard;
+        printf("%c7\x1b[9;0H", '\x1b');
+        if (restant-(actuel - retard_global)>=60)
+        {
+            int minute=(restant-(actuel - retard_global))/60;
+            printf("Temps restant pour la partie : %d min %0.0lf sec\n",minute,(restant-(actuel - retard_global))-minute*60);
+        }
+        else
+        {
+            printf("Temps restant pour la partie : %0.0lf\n",restant-(actuel - retard_global));
+        }
+        printf("Temps restant pour le coup: %0.0lf\n",param->tps_joueur - affiche +1);
+
+        if(tour%2)
+        {
+            printf("\n%8s : ",param->joueur1);
+        }
+        else
+        {
+            printf("\n%8s : ",param->joueur2);
+        }
+
+        printf("%c8", '\x1b');
+        fflush(stdout);
+
+        retard=difftime(time(NULL),temps_retard);
+        retard_coup=retard_coup+retard;
+        retard_global=retard_global+retard;
+        etat_jeu=1;
         }
         else if(etat_jeu==5)// gagnant
         {
             system("clear");
             if(tour%2)
             {
-            printf("\n\n\n\n\n\n\n\n\t\t\t%s a gagné FELICITATION !",param->joueur1);
+            printf("\n\n\n\n\n\n\n\n\t\t   %s tu as gagné FELICITATIONS !",param->joueur1);
             }
             else
             {
-            printf("\n\n\n\n\n\n\n\n\t\t\t%s a gagné FELICITATION !",param->joueur2);
+            printf("\n\n\n\n\n\n\n\n\t\t   %s tu as gagné FELICITATIONS !",param->joueur2);
             }
-            printf("\n\n\t\t\tAppuyer sur Entrée pour continuer");
+            printf("\n\n\t\t   Appuyer sur Entrée pour continuer");
             purger();
             liberer();
             etat_jeu=0;
@@ -86,6 +111,7 @@ while (cond)
         }
         else if(etat_jeu==6)// valide
         {
+            // Allocation du prochain élément de la liste
             if (param->debut_jeu==NULL)
             {
                 nouveau=malloc(sizeof(etape));
@@ -101,6 +127,7 @@ while (cond)
                 nouveau=param->fin_jeu;
             }
 
+            // On écrit le nom du joueur en cours
             if(tour%2)
             {
                 strcpy(nouveau->joueur,param->joueur1);
@@ -110,17 +137,23 @@ while (cond)
                 strcpy(nouveau->joueur,param->joueur2);
             }
 
+            // On écrit le temps restant
             nouveau->restant=restant - (difftime(time(NULL),temps_partie) - retard_global);
+
+            // On donne la main au thread jeu pour qu'il écrive le coup puis l'on reprend l'éxecution.
             sem_post(&sem_synch_jeu);
             sem_wait(&sem_synch_temps);
 
+            // On réinitialise les variables et on relance la boucle
             tour++;
             affiche=0;
             retard_coup=0;
+            etat_jeu=1;
             temps_coup=time(NULL);
-            continue;
+            sem_post(&sem_synch_jeu);
         }
-
+        else
+        {
 
         while(affiche > (difftime(time(NULL),temps_coup) - retard_coup) )
         {usleep(100000);}
@@ -129,29 +162,67 @@ while (cond)
 
         if (affiche>=param->tps_joueur)
         {
-        // A faire arret thrlastead jeu free mémoire et annoncer loser
-
+            pthread_cancel(IDjeu);
+            system("clear");
+            if(tour%2)
+            {
+            printf("\n\n\n\n\n\n\n\n\t%s tu n'as pas joué avant la fin de ton temps tu as perdu !",param->joueur1);
+            }
+            else
+            {
+            printf("\n\n\n\n\n\n\n\n\t%s tu n'as pas joué avant la fin de ton temps tu as perdu !",param->joueur2);
+            }
+            printf("\n\n\t\t   Appuyer sur Entrée pour continuer");
+            purger();
+            liberer();
+            etat_jeu=0;
+            sem_post(&sem_etat);
+            return;
         }
         else if ((actuel - retard_global)>=restant)
         {
-        // A faire arret thrlastead jeu free mémoire et annoncer loser
+            pthread_cancel(IDjeu);
+            system("clear");
+            printf("\n\n\n\n\n\n\n\n\t\t   Il ne reste plus de temps math nul !");
+            printf("\n\n\t\t   Appuyer sur Entrée pour continuer");
+            purger();
+            liberer();
+            etat_jeu=0;
+            sem_post(&sem_etat);
+            return;
         }
 
-//        printf("%c7", 27);
-        // A MODIFIER METTRE LE TEMPS RESTANT PAR COUP
         printf("%c7\x1b[9;0H", '\x1b');
-        printf("Temps restant pour la partie : %0.0lf\n",restant-(actuel - retard_global));
+        if (restant-(actuel - retard_global)>=60)
+        {
+            int minute=(restant-(actuel - retard_global))/60;
+            printf("Temps restant pour la partie : %d min %0.0lf sec\n",minute,(restant-(actuel - retard_global))-minute*60);
+        }
+        else
+        {
+            printf("Temps restant pour la partie : %0.0lf\n",restant-(actuel - retard_global));
+        }
         printf("Temps restant pour le coup: %0.0lf\n",param->tps_joueur - affiche);
+
+        if(tour%2)
+        {
+            printf("\n%8s : ",param->joueur1);
+        }
+        else
+        {
+            printf("\n%8s : ",param->joueur2);
+        }
+
         printf("%c8", '\x1b');
         fflush(stdout);
 
         affiche++;
 
-
+        }
         sem_post(&sem_etat);
         usleep(600000);
-
 
     }
 
 }
+
