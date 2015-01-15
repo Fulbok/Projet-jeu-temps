@@ -40,7 +40,7 @@ void Nvlle_partie(){
     //saisie des noms des 2 joueurs
     while(error1)
     {
-        printf("Nom joueur 1 (doit être inférieur à 8 caractères):");
+        printf("Nom joueur 1 (doit être inférieur à 8 caractères) : ");
         scanf("%s", joueur1);
         purger();
 
@@ -55,7 +55,7 @@ void Nvlle_partie(){
 
      while(error2)
     {
-        printf("Nom joueur 2 (doit être inférieur à 8 caractères):");
+        printf("Nom joueur 2 (doit être inférieur à 8 caractères) : ");
         scanf("%s", joueur2);
         purger();
         if((strlen(joueur2) >= 1) && (strlen(joueur2) <= 8))
@@ -74,30 +74,25 @@ void Nvlle_partie(){
     //Saisie différents temps de jeu.
    /* while(error_timeG)*/
     {
-        printf("Définir le temps de la partie (en secondes):");
+        printf("Définir le temps de la partie (en secondes) : ");
 
 
     while (!cond)
     {
         retour = scanf("%d%*[^\n]", &tps_global);
-        printf("retour : %d\n", retour);
-
-    if ( !retour )
-    {
-        /* erreur de saisie, on vide le flux */
         purger();
 
-        printf("on vous a demande de saisir un nombre\n");
-        printf("veuillez recommencer :\n");
-    }
-    else
-    {
-        /* reussite de la saisie */
-        getchar(); /* on enleve le '\n' restant */
-
-        printf("saisie acceptee\n");
-        cond = 1;  /* sort de la boucle */
-    }
+        if ( !retour )
+        {
+            /* erreur de saisie */
+            printf("On vous a demande de saisir un nombre\n");
+            printf("Veuillez recommencer : ");
+        }
+        else
+        {
+            /* reussite de la saisie */
+            cond = 1;  /* sort de la boucle */
+        }
 
     }
 
@@ -107,41 +102,39 @@ void Nvlle_partie(){
 
     cond=0; /* réinitialise cond*/
 
-    printf("Définir le temps pour un coup (en secondes):");
+    printf("Définir le temps pour un coup (en secondes) : ");
 
     while (!cond)
     {
-    retour = scanf("%d%*[^\n]", &tps_joueur);
-    printf("retour : %d\n", retour);
-    if ( !retour )
+        retour = scanf("%d%*[^\n]", &tps_joueur);
+        purger();
+
+        if ( !retour )
         {
-        /* erreur de saisie, on vide le flux */
-      purger();
-
-      printf("on vous a demande de saisir un nombre\n");
-      printf("veuillez recommencer :\n");
+            /* erreur de saisie */
+            printf("On vous a demandé de saisir un nombre.\n");
+            printf("Veuillez recommencer : ");
         }
-    else
+        else if(tps_joueur>tps_global)
         {
-        /* reussite de la saisie */
-        getchar(); /* on enleve le '\n' restant */
-
-        printf("saisie acceptee\n");
-        cond = 1;  /* sort de la boucle */
+            printf("Le temps pour un coup ne peut être supérieur au temps global.\n");
+            printf("Veuillez recommencer : ");
+        }
+        else
+        {
+            /* reussite de la saisie */
+            cond = 1;  /* sort de la boucle */
         }
 
-        }
-
-
+    }
         printf("Le temps par coup est de %d secondes\n", tps_joueur);
         param->tps_joueur=tps_joueur;
-
-        printf("\n\n\t\t Début de la partie\n");
-        sleep(1);
 
     }
 
     // On initialise le thread temps avec le temps de la partie puis on lance le jeu
+    printf("\n\tLa partie va se lancer, appuyer sur Entrée...\n");
+    purger();
     init_temps();
 
 }
@@ -198,7 +191,7 @@ void commandes()
     printf("Commandes : \n");
     printf("/valide  : joue un coup valide.\n");
     printf("/mauvais : tente de jouer un coup non valide.\n");
-    printf("/gagnant : joue un coup gagnant.");
+    printf("/gagnant : joue un coup gagnant. (permet de quitter la partie)");
     printf("%c8", '\x1b');
     fflush(stdout);
 

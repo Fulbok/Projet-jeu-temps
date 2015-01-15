@@ -7,10 +7,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
-
 #define CHARGER_ 1
 #define HISTORIQUE_ 2
-#define SAUVEGARDER_ 3
 
 #define MENU_ 1
 #define JEU_ 2

@@ -2,7 +2,7 @@
 
 param_structure * param = NULL;
 // Valeur de état :
-// 0=pas de partie
+// 0:pas de partie
 // 1:partie en cours
 // 2:quitter et sauvegarder
 // 3:pause

@@ -5,8 +5,8 @@ extern param_structure * param;
 int recup_chemin(int type)
 {
 printf("\nLes fichiers disponibles dans ce répertoire sont : \n");
-//system("find . -name *.histo");
-system("ls -R | grep .histo$");
+system("find . -name \"*.histo\"");
+//system("ls -R | grep .histo$");
 
 // nb représente la variable qui va déterminer s'il faut charger ou afficher le fichier.
 if (type!=CHARGER_ && type!=HISTORIQUE_)
@@ -44,11 +44,11 @@ if(fic!=NULL)
     sscanf(ligne,"%2s%8s %8s %4d%4d",hx,param->joueur1,param->joueur2,&param->tps_global,&param->tps_joueur);
 
     // Vérification pour détecter les espaces qui auraient disparus
-    sprintf(verif,"%s%s %s %04d%04d",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
+    sprintf(verif,"%s%8s %8s %04d%04d",hx,param->joueur1,param->joueur2,param->tps_global,param->tps_joueur);
     nb_saisie=strcmp(ligne,verif);
 
     // Vérification du HX
-    if (strcmp(hx,"HX")!=0 || nb_saisie!=0)
+    if (nb_saisie!=0)
     {
         printf("\nLe fichier n'est pas du bon format.\n");
         purger();
@@ -56,30 +56,41 @@ if(fic!=NULL)
     }
 
 
-    char coup[11],joueur[9],joueur_precedant[9]="";
+    char coup[8],joueur[9],joueur_precedant[9]="";
     int restant,assigne,i=1;
     int restant_precedant=param->tps_global;
     etape * nouveau;
 
     fscanf(fic,"%[^\n]",ligne);
-    fgetc(fic);
 
     while(strcmp(ligne,"FIN")!=0)
     {
         // Test si la fin du fichier est incorrecte
-        if(ligne==EOF)
+        if(fgetc(fic)==EOF)
         {
             printf("Erreur sur le format du fichier.");
             purger();
             return ERREUR;
         }
 
-        assigne=sscanf(ligne,"%4d%8s%s",&restant,joueur,coup);
+        assigne=sscanf(ligne,"%4d%8c%s",&restant,joueur,coup);
+        joueur[8]='\0';
+
+        while(joueur[0]==' ')
+        {
+            int j;
+            for(j=0;j<strlen(joueur);j++)
+            {
+                joueur[j]=joueur[j+1];
+            }
+            joueur[strlen(joueur)]='\0';
+        }
 
         // Vérification de lecture
-        if(restant>restant_precedant || assigne !=3 || strcmp(joueur,joueur_precedant)==0 || (strcmp(joueur,param->joueur1)==0 && strcmp(joueur,param->joueur2)==0))
+        if(restant>restant_precedant || assigne !=3 || strcmp(joueur,joueur_precedant)==0 || (strcmp(joueur,param->joueur1)!=0 && strcmp(joueur,param->joueur2)!=0) || strlen(coup)>6 || (restant_precedant -restant)>param->tps_joueur)
         {
-            printf("Une erreur est survenue dans le fichier ligne %d.\n assigne=%d , restant=%d, joueur=%s, coup=%s",i,assigne,restant,joueur,coup);
+//            printf("res=%d | res_prc=%d | assi=%d | j=%s | j1=%s | j2=%s | strl=%d",restant,restant_precedant,assigne,joueur,param->joueur1,param->joueur2,strlen(coup));
+            printf("\nUne erreur est survenue dans le fichier ligne %d.\n",i+1);
             purger();
             return ERREUR;
         }
@@ -88,12 +99,12 @@ if(fic!=NULL)
         if(type==HISTORIQUE_ && restant>=60)
         {
             printf("\nTour n°%d : \n",i);
-            printf("%s joue %s, il reste %d min %d sec\n",joueur,coup,(restant-restant%60)/60,restant%60);
+            printf("%8s joue %s, il reste %d min %d sec\n",joueur,coup,(restant-restant%60)/60,restant%60);
         }
         else if(type==HISTORIQUE_)
         {
             printf("\nTour n°%d : \n",i);
-            printf("%s joue %s, il reste %d sesondes\n",joueur,coup,restant);
+            printf("%8s joue %s, il reste %d sesondes\n",joueur,coup,restant);
         }
         // Si on veut charger les données.
         else
@@ -127,12 +138,11 @@ if(fic!=NULL)
         restant_precedant=restant;
 
         fscanf(fic,"%[^\n]",ligne);
-        fgetc(fic);
     }
 
     if(type==HISTORIQUE_)
     {
-        printf("\n Fin de la sauvegarde.\n");
+        printf("\n Fin de l'historique.\n");
         purger();
     }
     else
@@ -172,7 +182,7 @@ if(param->debut_jeu==NULL)
 printf("\nVeuillez saisir l'adresse du fichier à sauvegarder (sans l'extension) : \n");
 scanf("%s",chemin);
 scanf("%*[^\n]");
-getchar();
+purger();
 
 // Ajout de l'extension
 strcat(chemin,".histo");
@@ -227,13 +237,15 @@ if(fic!=NULL)
 }
 else
 {
-    printf("\nUne erreur c'est produite lors de la création du fichier.\n");
+    printf("\nUne erreur s'est produite lors de la création du fichier.\n");
     purger();
     return ERREUR;
 }
 
+fclose(fic);
+
 printf("Sauvegarde Réussie.\n");
-getchar();
+purger();
 return OK;
 }
 
