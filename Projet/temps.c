@@ -212,7 +212,15 @@ while (1)
         {
             pthread_cancel(IDjeu);
             system("clear");
-            printf("\n\n\n\n\n\n\n\n\t\t   Il ne reste plus de temps math nul !");
+            // On détecte quel joueur joue à partir de la parité du tour
+            if(tour%2)
+            {
+                printf("\n\n\n\n\n\n\n\n\t%s il n'y a plus de temps pour la partie tu as perdu !",param->joueur1);
+            }
+            else
+            {
+                printf("\n\n\n\n\n\n\n\n\t%s il n'y a plus de temps pour la partie tu as perdu !",param->joueur2);
+            }
             printf("\n\n\t\t   Appuyer sur Entrée pour continuer");
             purger();
             liberer();
